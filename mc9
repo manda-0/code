@@ -1,0 +1,29 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+N = int(1e6)
+SNRdBs = np.arange(-10, 11)
+SNRs = 10**(SNRdBs/10)
+
+# bits = np.random.randint(0, 2, N)
+bits = np.random.randn(N)>0.5
+
+symbols = 2*bits -1
+
+BERs = []
+
+for SNR in SNRs:
+  noise_power = 1/SNR
+  noise = np.sqrt(noise_power)*np.random.randn(N)
+
+  received = symbols + noise
+
+  decoded_bits = (received >=0).astype(int)
+
+  BER = np.sum(bits != decoded_bits)/N
+  BERs.append(BER)
+
+plt.semilogy(SNRdBs, BERs)
+plt.xlabel('SNR dB')
+plt.ylabel('BER')
+plt.grid(True)
